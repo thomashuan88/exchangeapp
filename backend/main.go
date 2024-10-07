@@ -2,24 +2,18 @@ package main
 
 import (
 	"exchangeapp/backend/config"
-
-	"github.com/gin-gonic/gin"
+	"exchangeapp/backend/router"
 )
 
 func main() {
 	config.InitConfig()
 
-	// simple any
-	type Info struct {
-		Message string
-	}
-	InfoTest := Info{
-		Message: "Hello World!",
-	}
-	r := gin.Default()
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(200, InfoTest)
-	})
+	r := router.SetupRouter()
 
-	r.Run("0.0.0.0:" + config.AppConfig.App.Port)
+	port := config.AppConfig.App.Port
+	if port == "" {
+		port = "8000"
+	}
+
+	r.Run("0.0.0.0:" + port)
 }
