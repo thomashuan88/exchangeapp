@@ -3,8 +3,7 @@ app:
   port: 8000
 
 database:
-  host: localhost
-  port: 3306
-  user: thomas
-  password: huan1122
-  dbname: currency_exchange
+  dsn: "thomas:huan1122@tcp(127.0.0.1:3306)/currency_exchange?charset=utf8mb4&parseTime=True&loc=Local"
+  maxIdleConns: 11
+  maxOpenConns: 114
+  

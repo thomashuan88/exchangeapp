@@ -8,11 +8,9 @@ type Config struct {
 		Port string
 	}
 	Database struct {
-		Host     string
-		Port     string
-		User     string
-		Password string
-		Dbname   string
+		Dsn          string
+		MaxIdleConns int
+		MaxOpenConns int
 	}
 }
 

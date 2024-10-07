@@ -15,9 +15,7 @@ func TestInitConfig(t *testing.T) {
 	InitConfig()
 	assert.Equal(t, "CurrencyExchangeApp", AppConfig.App.Name)
 	assert.Equal(t, "8000", AppConfig.App.Port)
-	assert.Equal(t, "localhost", AppConfig.Database.Host)
-	assert.Equal(t, "3306", AppConfig.Database.Port)
-	assert.Equal(t, "thomas", AppConfig.Database.User)
-	assert.Equal(t, "huan1122", AppConfig.Database.Password)
-	assert.Equal(t, "currency_exchange", AppConfig.Database.Dbname)
+	assert.Equal(t, "thomas", AppConfig.Database.Dsn)
+	assert.Equal(t, 11, AppConfig.Database.MaxIdleConns)
+	assert.Equal(t, 114, AppConfig.Database.MaxOpenConns)
 }
