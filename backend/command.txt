@@ -1,3 +1,14 @@
 go get -u gorm.io/gorm   // install gorm
 
 go get -u gorm.io/driver/mysql
+go mod tidy
+
+-- global/global.go : all global variables here
+
+
+todo:
+- test sum value with decimal and save to db
+
+go get -u golang.org/x/crypto/bcrypt
+
+go get github.com/golang-jwt/jwt/v5

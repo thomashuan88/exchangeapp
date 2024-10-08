@@ -29,4 +29,6 @@ func InitConfig() {
 	if err != nil {
 		panic(err)
 	}
+
+	InitDB()
 }

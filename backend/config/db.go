@@ -1,6 +1,7 @@
 package config
 
 import (
+	"exchangeapp/backend/global"
 	"log"
 	"time"
 
@@ -23,4 +24,6 @@ func InitDB() {
 	if err != nil {
 		log.Fatalf("Failed to config database, error: %v", err)
 	}
+
+	global.Db = db
 }
