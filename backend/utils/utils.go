@@ -1,9 +1,10 @@
 package utils
 
 import (
+	"errors"
 	"time"
 
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -27,4 +28,23 @@ func GenarateJWT(username string) (string, error) {
 func CheckPassword(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
+}
+
+func ParseJWT(token string) (string, error) {
+	if len(token) > 7 && token[:7] == "Bearer " {
+		token = token[7:]
+	}
+	jwtToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("unexpected signing method")
+		}
+		return []byte("secret"), nil
+	})
+	if err != nil {
+		return "", err
+	}
+	if claims, ok := jwtToken.Claims.(jwt.MapClaims); ok && jwtToken.Valid {
+		return claims["username"].(string), nil
+	}
+	return "", errors.New("invalid token")
 }
