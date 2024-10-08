@@ -23,3 +23,8 @@ func GenarateJWT(username string) (string, error) {
 	}
 	return "Bearer " + Token, nil
 }
+
+func CheckPassword(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}

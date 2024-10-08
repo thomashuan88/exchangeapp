@@ -12,3 +12,6 @@ todo:
 go get -u golang.org/x/crypto/bcrypt
 
 go get github.com/golang-jwt/jwt/v5
+
+db.where("name = ?", "haah").First(&user) // select * from users where name = "haah" order by id limit 1;
+
