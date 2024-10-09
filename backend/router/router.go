@@ -13,7 +13,6 @@ func SetupRouter() *gin.Engine {
 	auth := r.Group("/api/auth")
 	{
 		auth.POST("/login", controllers.Login)
-
 		auth.POST("/register", controllers.Register)
 	}
 
@@ -22,6 +21,11 @@ func SetupRouter() *gin.Engine {
 	api.Use(middlewares.AuthMiddleWare())
 	{
 		api.POST("/exchange_rate", controllers.CreateExchangeRate)
+		api.POST("/article", controllers.CreateArticle)
+		api.GET("/article", controllers.GetArticle)
+		api.GET("/article/:id", controllers.GetArticleById)
+		api.POST("/article/:id/like", controllers.LikeArticle)
+		api.GET("/article/:id/likes", controllers.GetArtileLikes)
 	}
 
 	return r

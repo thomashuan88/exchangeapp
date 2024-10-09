@@ -1,11 +1,13 @@
 package controllers
 
 import (
+	"errors"
 	"exchangeapp/backend/global"
 	"exchangeapp/backend/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func CreateArticle(ctx *gin.Context) {
@@ -35,4 +37,19 @@ func GetArticle(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"data": articales})
+}
+
+func GetArticleById(ctx *gin.Context) {
+	var articale models.Articale
+	id := ctx.Param("id")
+
+	if err := global.Db.Where("id = ?", id).First(&articale).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"data": articale})
 }

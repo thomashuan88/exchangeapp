@@ -25,5 +25,6 @@ func InitDB() {
 		log.Fatalf("Failed to config database, error: %v", err)
 	}
 
+	log.Println("Database initialized")
 	global.Db = db
 }
