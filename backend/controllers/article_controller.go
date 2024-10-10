@@ -1,14 +1,19 @@
 package controllers
 
 import (
+	"encoding/json"
 	"errors"
 	"exchangeapp/backend/global"
 	"exchangeapp/backend/models"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis"
 	"gorm.io/gorm"
 )
+
+var cacheKey = "articles"
 
 func CreateArticle(ctx *gin.Context) {
 	var Articale models.Articale
@@ -27,15 +32,50 @@ func CreateArticle(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	ctx.JSON(http.StatusOK, gin.H{"data": Articale})
-}
 
-func GetArticle(ctx *gin.Context) {
-	var articales []models.Articale
-	if err := global.Db.Find(&articales).Error; err != nil {
+	if err := global.RedisDB.Del(cacheKey).Err(); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
+	ctx.JSON(http.StatusOK, gin.H{"data": Articale})
+}
+
+func GetArticles(ctx *gin.Context) {
+	var articales []models.Articale
+
+	cachedData, err := global.RedisDB.Get(cacheKey).Result()
+	if err == nil {
+		if err := json.Unmarshal([]byte(cachedData), &articales); err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+	} else if err == redis.Nil {
+
+		if err := global.Db.Find(&articales).Error; err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+				return
+			}
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		articleJSON, err := json.Marshal(articales)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		if err := global.RedisDB.Set(cacheKey, articleJSON, 10*time.Minute).Err(); err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+	} else {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	ctx.JSON(http.StatusOK, gin.H{"data": articales})
 }
 
