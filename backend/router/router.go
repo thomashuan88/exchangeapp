@@ -30,6 +30,9 @@ func SetupRouter() *gin.Engine {
 	api := r.Group("/api")
 	api.GET("/exchange_rate", controllers.GetExchangeRate)
 	api.Use(middlewares.AuthMiddleWare())
+
+	// validate := validation.NewValidator()
+	// api.Use(middlewares.ValidationMiddleware(validate))
 	{
 		api.POST("/exchange_rate", controllers.CreateExchangeRate)
 		api.POST("/articles", controllers.CreateArticle)
@@ -37,6 +40,8 @@ func SetupRouter() *gin.Engine {
 		api.GET("/articles/:id", controllers.GetArticleById)
 		api.POST("/articles/:id/like", controllers.LikeArticle)
 		api.GET("/articles/:id/likes", controllers.GetArtileLikes)
+		api.POST("/orders", controllers.NewOrderController().CreateOrder)
+		api.GET("/orders", controllers.NewOrderController().GetOrdersByCustomer)
 	}
 
 	return r

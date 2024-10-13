@@ -206,3 +206,16 @@ func TestXX6(t *testing.T) {
 	wg.Wait()
 	t.Log("all task stopped")
 }
+
+type MySlice []int
+
+func (m *MySlice) append(val int) {
+	*m = append(*m, val)
+}
+
+func TestXX7(t *testing.T) {
+	s := MySlice{}
+	s.append(1)
+	s.append(2)
+	t.Log(s)
+}

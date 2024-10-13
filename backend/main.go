@@ -4,16 +4,19 @@ import (
 	"context"
 	"exchangeapp/backend/config"
 	"exchangeapp/backend/router"
+	"exchangeapp/backend/validation"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
+
+	"github.com/gin-gonic/gin/binding"
 )
 
 func main() {
 	config.InitConfig()
-
+	binding.Validator = validation.NewValidator()
 	r := router.SetupRouter()
 
 	port := config.AppConfig.App.Port
