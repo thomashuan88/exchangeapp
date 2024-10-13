@@ -1,6 +1,6 @@
 #!/bin/bash
 
-auth_token="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjg5MTk3NzAsInVzZXJuYW1lIjoidGhvbWFzIn0.uAzlvOztv9gKuQ03h1Rcj9ZHCcP296thQymxLRtlb5w"
+auth_token=""
 
 for i in {1..1000}; do
   customer_id=$(( $RANDOM % 10 + 1 ))
@@ -16,8 +16,3 @@ for i in {1..1000}; do
     http://localhost:8000/api/orders
 done
 
-# curl -X POST \
-#     -H "Content-Type: application/json" \
-#     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjg5MTk3NzAsInVzZXJuYW1lIjoidGhvbWFzIn0.uAzlvOztv9gKuQ03h1Rcj9ZHCcP296thQymxLRtlb5w" \
-#     -d '{"order_date": "2024-10-12T05:34:02Z", "total": "24.643", "status": "delivered" }' \
-#     http://localhost:8000/api/orders
